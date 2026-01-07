@@ -77,10 +77,13 @@ pip install -r requirements.txt
 chmod +x main.py
 ```
 
-Required libraries include:
-* typer
-* rich
-* zxcvbn
+### Verify Installation
+
+```bash
+python3 main.py info
+```
+
+If you see the PassAudit information screen, the installation is successful!
 
 ---
 
@@ -97,10 +100,13 @@ python main.py check
 
 ```bash
 # Check a specific password
-python main.py check --password "MyP@ssw0rd123" --show
+python3 main.py check --password "MyP@ssw0rd123" --show
 
 # Export report
-python main.py check --export report.json
+python3 main.py check --password "MyPassword" --export report.json
+
+# With additional dictionary
+python3 main.py check -p "test123" --dict custom_passwords.txt
 ```
 
 ### Generate Strong Passwords
@@ -119,14 +125,24 @@ python main.py generate --style mixed --count 3
 python main.py generate --style alphanumeric --count 5
 ```
 
+Available styles:
+- `passphrase` - Word-based passwords (e.g., "Correct-Horse-Battery-Staple42")
+- `mixed` - Random mix of letters, numbers, and symbols
+- `alphanumeric` - Letters and numbers only
+- `pin` - Numeric only
+
+
 ### Batch Analysis
 
 ```bash
-# Analyze passwords from a file
-python main.py batch passwords.txt
+# Create a test file
+echo -e "password123\nadmin\nqwerty\nMyP@ssw0rd!" > passwords.txt
+
+# Analyze passwords from file
+python3 main.py batch passwords.txt
 
 # Custom output file
-python main.py batch passwords.txt --output results.csv
+python3 main.py batch passwords.txt --output results.csv
 ```
 
 ### Get Information
@@ -139,11 +155,41 @@ python main.py info
 
 ## 📈 Example Output
 
-* Strength score from 0 to 4
-* Estimated crack time
-* Entropy in bits
-* Breach detection warning
-* Actionable security recommendations
+### Password Check Example
+
+```
+Password: ********
+Length: 8 characters
+Strength: Weak (1/4)
+Entropy: 37.6 bits
+SHA-256 Hash: a665a45920422f...
+
+⚠ WARNING: This is a commonly used password!
+It appears in known password breach databases and should not be used.
+
+Security Recommendations:
+  1. ⚠️ This password has been exposed in data breaches
+  2. Use at least 12 characters for better security
+  3. Add uppercase letters, special characters for better security
+
+Suggested Strong Password:
+  Ceramic-Snowman-Tropical-Bagel89
+  Strength: 4/4
+```
+
+### Password Generation Example
+
+```
+Generating 3 strong password(s):
+
+┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━┓
+┃ #  ┃ Password                   ┃ Length ┃ Entropy  ┃
+┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━┩
+│ 1  │ Bamboo-Acrobat-Olive32     │ 23     │ 61.2 bits│
+│ 2  │ Gadget-Flamingo-Metric77   │ 25     │ 64.5 bits│
+│ 3  │ Plumber-Cosmic-Anchor91    │ 24     │ 62.3 bits│
+└────┴────────────────────────────┴────────┴──────────┘
+```
 
 ---
 
