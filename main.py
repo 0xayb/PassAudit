@@ -2,7 +2,7 @@
 
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 import typer
 from rich.console import Console
 from rich.align import Align
@@ -27,12 +27,18 @@ BANNER = r"""
             Author: Ayoub SERARFI
 """
 
-app = typer.Typer(help="Professional Password Security Analyzer")
+app = typer.Typer(help="Professional Password Security Analyzer", add_completion=False)
 console = Console()
-console.print(BANNER, style="bold cyan")
 display = DisplayManager()
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
+_banner_printed = False
+
+def print_banner():
+    global _banner_printed
+    if not _banner_printed:
+        console.print(BANNER, style="bold cyan")
+        _banner_printed = True
 
 @app.command()
 def check(
@@ -48,7 +54,7 @@ def check(
         "-s",
         help="Display password in output (default: masked)"
     ),
-    dict_paths: Optional[list[str]] = typer.Option(
+    dict_paths: Optional[List[str]] = typer.Option(
         None,
         "--dict",
         "-d",
@@ -61,6 +67,7 @@ def check(
         help="Export report to file (json or csv)"
     )
 ):
+    print_banner()
     
     # Load password dictionaries
     console.print("[dim]Loading password dictionaries...[/dim]")
@@ -136,6 +143,7 @@ def generate(
         help="Password style: passphrase, mixed, alphanumeric"
     )
 ):
+    print_banner()
     generator = PasswordGenerator()
     display.show_generated_passwords(generator, count, entropy, style)
 
@@ -192,6 +200,7 @@ def batch(
 
 @app.command()
 def info():
+    print_banner()
     display.show_info()
 
 
